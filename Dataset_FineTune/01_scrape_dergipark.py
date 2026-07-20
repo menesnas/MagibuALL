@@ -1,32 +1,3 @@
-"""
-01_scrape_dergipark.py
-
-DergiPark uzerindeki "Journal of Faculty of Pharmacy of Ankara University"
-(jfpanu) dergisini 2023-2026 yillari icin otomatik olarak tarar ve PDF'leri
-indirir.
-
-Neden bu dergi/kaynak?
-  - dergipark.org.tr robots.txt ile bu sayfalari (archive, issue, download)
-    ENGELLEMIYOR (eczacidergisi.com.tr'nin aksine) - test ettim, erisim var.
-  - Dergi acik erisimli ve Creative Commons Atif (CC BY) 4.0 lisansli, yani
-    indirip islemek ve turetilmis veri seti/tokenizer uretmek icin telif
-    acisindan en temiz secenek. Yine de dagitirken (paylasirken) atif
-    (yazar, baslik, DOI) bilgisini korumak iyi bir pratiktir; bu script
-    metadata'yi (yazar, baslik, DOI, lisans) her PDF ile birlikte kaydeder.
-
-Nasil calisir?
-  1) Arsiv sayfasini ceker: https://dergipark.org.tr/en/pub/jfpanu/archive
-  2) Sayfadaki her "issue" linkini ve yanindaki tarihi bulup yili tahmin eder
-  3) 2023-2026 arasindaki sayilari secer
-  4) Her sayi icin once tek parca "issue-full-file" PDF'ini indirmeyi dener;
-     yoksa sayi sayfasindaki her makalenin "article-file" PDF'ini tek tek indirir
-  5) 19 Temmuz 2026 itibariyle dogrulanmis bir sayi listesini yedek (fallback)
-     olarak barindirir; boylece site HTML yapisi degisse bile 2023-2026
-     icin veri kaybi olmaz. Yeni cikan sayilar icin dinamik tarama devrede.
-
-Nazik tarama: istekler arasinda bekleme var, tek bir User-Agent kullanilir,
-ve sadece bu bir dergiye odaklanilir (siteyi agir yuklemez).
-"""
 import os
 import re
 import time
@@ -69,17 +40,6 @@ def get(url):
 
 
 def discover_issue_ids():
-    """
-    Arsiv sayfasindan issue id -> yil eslemesini dinamik olarak cikarmaya calisir.
-
-    DergiPark arsiv sayfasi sayilari yil basliklarina gore gruplar (ör. "2026"
-    basligi altinda o yila ait sayi linkleri gelir). Bu yuzden sayfadaki tum
-    dugumler (descendants) SIRAYLA gezilir; tek basina 4 haneli bir yil metni
-    gorulunce "guncel yil" olarak not edilir, bir issue linki gorulunce de
-    o an gecerli olan yila atanir. (Not: a.find_parent() ile tum kapsayici
-    div'in metnini almak yanlis sonuc verir, cunku ayni div icinde birden
-    fazla yila ait link olabilir - bu yuzden sirali/lineer gezinme kullanilir.)
-    """
     discovered = {}
     try:
         resp = get(ARCHIVE_URL)
