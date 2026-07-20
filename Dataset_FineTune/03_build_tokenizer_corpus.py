@@ -1,24 +1,3 @@
-"""
-03_build_tokenizer_corpus.py
-
-texts/*.json icindeki sayfa sayfa metinleri tek bir corpus.txt dosyasinda
-birlestirir. Tokenizer egitimi (SentencePiece/BPE) icin bu tur duz metin
-corpus'u kullanilir (JSON/mesaj formati degil - tokenizer sadece ham metin
-ister).
-
-jfpanu (ve benzeri) dergiler Turkce VE Ingilizce makaleleri karisik
-yayinladigi icin, corpus'a girmeden once HER SAYFA icin dil tespiti
-yapilir (langdetect) ve sadece Turkce olarak tespit edilen sayfalar
-alinir. Boylece corpus sadece Turkce metinden olusur, Ingilizce
-makaleler/sayfalar atlanir (dropped_pages_by_lang.json'a hangi
-sayfalarin/dosyalarin hangi dil yuzunden elendigi kaydedilir).
-
-Ayrica cok kisa/gurultulu satirlari eler; link, e-posta, telefon/faks,
-ORCID, ISSN, gonderim/kabul/yayin tarihi ve editor/hakem/yayin kurulu
-kunye satirlari gibi tokenizer icin "saf bilgi" sayilmayan idari satirlari
-NOISE_LINE_PATTERNS ile temizler. Satir bazinda karistirir (shuffle) degil,
-sirali birakir (istege bagli olarak asagida shuffle acilabilir).
-"""
 import os
 import re
 import glob
